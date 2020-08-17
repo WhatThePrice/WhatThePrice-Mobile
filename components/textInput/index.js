@@ -2,6 +2,12 @@ import React from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from "react-native";
 
 class TextInputComponent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            viewPass: true,
+        }
+    }
     render() {
         return(
             <View>
@@ -10,9 +16,26 @@ class TextInputComponent extends React.Component {
                     placeholder={this.props.inputPlaceHolder}
                     style={styles.formInput}
                     keyboardType={this.props.inputKeyType}
-                    secureTextEntry={this.props.inputSecure}
-                    // onChangeText={this.props.onChange}
+                    secureTextEntry={this.props.inputSecure && this.state.viewPass}
+                    onChangeText={this.props.onChange}
                 />
+                {this.props.showHide && (
+                    <TouchableOpacity
+                        onPress = { () => this.setState({ viewPass: !this.state.viewPass }) }
+                        style = {{ 
+                            width: 50,
+                            height: 30,
+                            backgroundColor: "skyblue",
+                            marginBottom: 20,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            borderWidth: 2,
+                            borderColor: "black",
+                        }}
+                    >
+                        <Text>{ this.state.viewPass ? "Show" : "Hide" }</Text>
+                    </TouchableOpacity>
+                )}
             </View>
         );
     }
