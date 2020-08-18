@@ -2,11 +2,11 @@ import { takeLatest, call, all, fork, put } from "redux-saga/effects";
 import Actions from "../../actions";
 import * as api from "../../api";
 
-import { store } from "store/index";
+// import { store } from "store/index";
 
 import {getStore} from '../../store/configureStore';
 
-import { encode } from "../../services/encryption";
+// import { encode } from "../../services/encryption";
 
 function* premiumUpgrade({ data }) {
     let store = getStore().getState();
