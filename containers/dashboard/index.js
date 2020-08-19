@@ -11,7 +11,7 @@ class Dashboard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            todoList: [],
+            userInfo: [],
             refreshing: false,
         };
     }
@@ -27,16 +27,16 @@ class Dashboard extends React.Component {
        if(prevProps.getGetInfoData.isLoading && !getGetInfoData.isLoading) {
            this.setState({ refreshing: false });
            if(getGetInfoData.data.status === "success"){
-                this.setState({ todoList: getGetInfoData.data.user });
+                this.setState({ userInfo: getGetInfoData.data.user });
            };
-        //    this.setState({ todoList: getGetInfoData.data.list });
+        //    this.setState({ userInfo: getGetInfoData.data.list });
        }
     }
     render() {
         return(
             <View>
                 <View style={styles.header}>
-                    <Text style={styles.text}>Welcome, {this.state.todoList.name}!</Text>
+                    <Text style={styles.text}>Welcome, {this.state.userInfo.name}!</Text>
                 </View>
                 <View style={styles.search}>
                     <TextInputComponent
@@ -44,6 +44,7 @@ class Dashboard extends React.Component {
                         inputPlaceHolder="product name"
                         inputKeyType="default"
                         inputSecure={false}
+                        clearButton="always"
                     />
                     <InputButton
                         title="Search"

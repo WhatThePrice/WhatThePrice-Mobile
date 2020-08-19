@@ -9,10 +9,12 @@ class Profile extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            todoList: [],
+            userInfo: [],
             refreshing: false,
         };
     }
+
+    // Get Info
 
     componentDidMount() {
         this.props.onGetInfo();
@@ -21,19 +23,38 @@ class Profile extends React.Component {
     componentDidUpdate(prevProps) {
         const { getGetInfoData } = this.props;
 
-       console.log("DID UPDATE USER INFO" ,getGetInfoData)
+       console.log("DID UPDATE USER INFO yes" ,getGetInfoData)
        if(prevProps.getGetInfoData.isLoading && !getGetInfoData.isLoading) {
            this.setState({ refreshing: false });
            if(getGetInfoData.data.status === "success"){
-                this.setState({ todoList: getGetInfoData.data.user });
+                this.setState({ userInfo: getGetInfoData.data.user });
            };
-        //    this.setState({ todoList: getGetInfoData.data.list });
+        //    this.setState({ userInfo: getGetInfoData.data.list });
        }
     }
 
+    // // Get Full
+
+    // componentDidMount() {
+    //     this.props.onGetFull();
+    // }
+
+    // componentDidUpdate(prevProps) {
+    //     const { getGetFullData } = this.props;
+
+    //    console.log("DID UPDATE USER FULL yes" ,getGetFullData)
+    //    if(prevProps.getGetFullData.isLoading && !getGetFullData.isLoading) {
+    //        this.setState({ refreshing: false });
+    //        if(getGetFullData.data.status === "success"){
+    //             this.setState({ userInfo: getGetFullData.data.userProfile });
+    //        };
+    //     //    this.setState({ todoList: getGetFullData.data.list });
+    //    }
+    // }
+
     onRefresh() {
         this.setState({ refreshing: true });
-        // setTimeout( () => {this.props.onGetInfo()}, 2000 );
+        // setTimeout( () => {this.props.onGetFull()}, 2000 );
         this.props.onGetInfo();
     }
 
@@ -60,28 +81,23 @@ class Profile extends React.Component {
             <View style={styles.profile}>
                 <Text>This is Profile Page</Text>
                 <View style={styles.info}>
-                    <Text style={[styles.text, styles.bold]}>User ID: {this.state.todoList.id}</Text>
-                    <Text style={styles.text}>Name: {this.state.todoList.name}</Text>
-                    <Text style={styles.text}>Email: {this.state.todoList.email}</Text>
-                    <Text style={[styles.text, styles.bold]}>User Type: {this.state.todoList.user_type}</Text>
+                    <Text style={[styles.text, styles.bold]}>User ID: {this.state.userInfo.id}</Text>
+                    <Text style={styles.text}>Name: {this.state.userInfo.name}</Text>
+                    <Text style={styles.text}>Email: {this.state.userInfo.email}</Text>
+                    <Text style={[styles.text, styles.bold]}>User Type: {this.state.userInfo.user_type}</Text>
+                    {/* <Text>Name: {this.state.userInfo.name}</Text> */}
                 </View>
-                {/* <FlatList
-                    style={styles.profileList}
-                    // data={movieData.filter((list) => (list.type === this.state.selected))}
-                    // data={this.state.todoList.filter((item) => (item.status === this.state.selected))}
-                    renderItem={({ item }) => this._renderCardList(item)}
-                    // numColumns={2}
-                    contentContainerStyle={{ alignItems: "center" }}
-                    refreshControl = {
-                        <RefreshControl
-                            refreshing = {this.state.refreshing}
-                            onRefresh = {() => (this.onRefresh())}
-                        />
-                    }
-                    // Ask why FlatList is not displaying data. Why data is empty when calling for API
-                /> */}
 
-                {this.state.todoList.user_type === "premium" ? (
+                <View style={styles.detail}>
+                    <InputButton
+                        title="View User Details"
+                        screenColor="darkgreen"
+                        textColor="white"
+                        navigate={ () => this.props.navigation.navigate("Details") }
+                    />
+                </View>
+
+                {this.state.userInfo.user_type === "premium" ? (
                     <View style={styles.free}>
                     <InputButton
                         title="Cancel Premium"
@@ -133,6 +149,11 @@ const styles = {
         fontSize: 20,
         marginVertical: 20,
     },
+    detail: {
+        width: "100%",
+        paddingHorizontal: 20,
+        marginVertical: 20,
+    },
     free: {
         width: "100%",
         paddingHorizontal: 20,
@@ -152,6 +173,8 @@ const styles = {
     },
 }
 
+// Get Info
+
 const mapStateToProps = (store) => ({
     // getUserSession: Actions.getUserSession(store),
     getGetInfoData: Actions.getGetInfoData(store),
@@ -161,5 +184,17 @@ const mapDispatchToProps = {
     onResetUserSession: Actions.resetUserSession,
     onGetInfo: Actions.getInfo,
 };
+
+// // Get Full
+
+// const mapStateToProps = (store) => ({
+//     // getUserSession: Actions.getUserSession(store),
+//     getGetFullData: Actions.getGetFullData(store),
+// });
+
+// const mapDispatchToProps = {
+//     onResetUserSession: Actions.resetUserSession,
+//     onGetFull: Actions.getFull,
+// };
 
 export default connect(mapStateToProps, mapDispatchToProps) (Profile);

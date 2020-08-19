@@ -15,6 +15,11 @@ export const getInfo = headers => {
     return fetchApi("get", "api/user", null, headers);
 };
 
+// get full
+export const getFull = headers => {
+    return fetchApi("get", "api/getprofile", null, headers);
+};
+
 // changetype
 export const premiumUpgrade = (data, headers) => {
     return fetchApi("post", "api/usertype", data, headers);

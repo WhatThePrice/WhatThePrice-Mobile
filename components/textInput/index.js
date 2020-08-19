@@ -18,6 +18,7 @@ class TextInputComponent extends React.Component {
                     keyboardType={this.props.inputKeyType}
                     secureTextEntry={this.props.inputSecure && this.state.viewPass}
                     onChangeText={this.props.onChange}
+                    clearButtonMode={this.props.clearButton}
                 />
                 {this.props.showHide && (
                     <TouchableOpacity
