@@ -10,7 +10,12 @@ export const register = data => {
     return fetchApi("post", "api/register", data);
 };
 
-// get user
-export const getUser = headers => {
-    return fetchApi("get", "api/user", headers);
+// get info
+export const getInfo = headers => {
+    return fetchApi("get", "api/user", null, headers);
+};
+
+// changetype
+export const premiumUpgrade = (data, headers) => {
+    return fetchApi("post", "api/usertype", data, headers);
 };

@@ -11,6 +11,8 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Auth from "containers/auth";
 import Dashboard from "containers/dashboard";
 import Profile from "containers/profile";
+import UserType from "containers/userType";
+import Result from "containers/result";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -69,6 +71,14 @@ class Navigator extends React.Component {
                     <Stack.Screen
                         name="BottomTab"
                         component={BottomTab}
+                    />
+                    <Stack.Screen
+                        name="UserType"
+                        component={UserType}
+                    />
+                    <Stack.Screen
+                        name="Result"
+                        component={Result}
                     />
                 </Stack.Navigator>
             </NavigationContainer>

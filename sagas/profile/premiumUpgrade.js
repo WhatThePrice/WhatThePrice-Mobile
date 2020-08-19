@@ -14,15 +14,17 @@ function* premiumUpgrade({ data }) {
     const headers = { Authorization: `Bearer ${token}` };
 
     const formData = new FormData();
-    formData.append("id", data);
+    // formData.append("id", data);
+    console.log("SAGA data is", data.type);
+    formData.append("type", data.type);
 
     const { response, error } = yield call(api.premiumUpgrade, formData, headers);
-    console.log(response, error);
+    console.log("premium upgrade saga", response, error);
 
     // if response status is success then we will update the reducer
     if(response && response.data.status === 'success') {
         yield put(Actions.premiumUpgradeSuccess(response.data));
-        yield put(Actions.getUser());
+        yield put(Actions.getInfo());
     }
     if(error) {
         yield put(Actions.premiumUpgradeFail(error.response));

@@ -1,9 +1,9 @@
 import * as userSession from "./userSession";
-import * as getUser from "./getUser";
+import * as getInfo from "./getInfo";
 import * as premiumUpgrade from "./premiumUpgrade";
 
 export default {
   ...userSession,
-  ...getUser,
+  ...getInfo,
   ...premiumUpgrade,
 };
