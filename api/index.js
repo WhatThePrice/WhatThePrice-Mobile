@@ -24,3 +24,8 @@ export const getFull = headers => {
 export const premiumUpgrade = (data, headers) => {
     return fetchApi("post", "api/usertype", data, headers);
 };
+
+// edit info
+export const editAll = (data, headers) => {
+    return fetchApi("post", "api/profile", data, headers);
+};

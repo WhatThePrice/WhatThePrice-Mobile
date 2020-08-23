@@ -13,7 +13,7 @@ import Dashboard from "containers/dashboard";
 import Profile from "containers/profile";
 import UserType from "containers/userType";
 import Result from "containers/result";
-import Details from "containers/details";
+import AddInfo from "containers/addInfo";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -82,8 +82,8 @@ class Navigator extends React.Component {
                         component={Result}
                     />
                     <Stack.Screen
-                        name="Details"
-                        component={Details}
+                        name="AddInfo"
+                        component={AddInfo}
                     />
                 </Stack.Navigator>
             </NavigationContainer>

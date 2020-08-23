@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Alert, FlatList, RefreshControl } from "react-native";
+import { View, Text, Alert, FlatList, RefreshControl, ScrollView } from "react-native";
 import InputButton from "components/inputButton";
 
 import { connect } from "react-redux";
@@ -14,43 +14,43 @@ class Profile extends React.Component {
         };
     }
 
-    // Get Info
-
-    componentDidMount() {
-        this.props.onGetInfo();
-    }
-
-    componentDidUpdate(prevProps) {
-        const { getGetInfoData } = this.props;
-
-       console.log("DID UPDATE USER INFO yes" ,getGetInfoData)
-       if(prevProps.getGetInfoData.isLoading && !getGetInfoData.isLoading) {
-           this.setState({ refreshing: false });
-           if(getGetInfoData.data.status === "success"){
-                this.setState({ userInfo: getGetInfoData.data.user });
-           };
-        //    this.setState({ userInfo: getGetInfoData.data.list });
-       }
-    }
-
-    // // Get Full
+    // // Get Info
 
     // componentDidMount() {
-    //     this.props.onGetFull();
+    //     this.props.onGetInfo();
     // }
 
     // componentDidUpdate(prevProps) {
-    //     const { getGetFullData } = this.props;
+    //     const { getGetInfoData } = this.props;
 
-    //    console.log("DID UPDATE USER FULL yes" ,getGetFullData)
-    //    if(prevProps.getGetFullData.isLoading && !getGetFullData.isLoading) {
+    //    console.log("DID UPDATE USER INFO yes" ,getGetInfoData)
+    //    if(prevProps.getGetInfoData.isLoading && !getGetInfoData.isLoading) {
     //        this.setState({ refreshing: false });
-    //        if(getGetFullData.data.status === "success"){
-    //             this.setState({ userInfo: getGetFullData.data.userProfile });
+    //        if(getGetInfoData.data.status === "success"){
+    //             this.setState({ userInfo: getGetInfoData.data.user });
     //        };
-    //     //    this.setState({ todoList: getGetFullData.data.list });
+    //     //    this.setState({ userInfo: getGetInfoData.data.list });
     //    }
     // }
+
+    // Get Full
+
+    componentDidMount() {
+        this.props.onGetFull();
+    }
+
+    componentDidUpdate(prevProps) {
+        const { getGetFullData } = this.props;
+
+       console.log("DID UPDATE USER FULL yes" ,getGetFullData)
+       if(prevProps.getGetFullData.isLoading && !getGetFullData.isLoading) {
+           this.setState({ refreshing: false });
+           if(getGetFullData.data.status === "success"){
+                this.setState({ userInfo: getGetFullData.data.userProfile[0] });
+           };
+        //    this.setState({ todoList: getGetFullData.data.list });
+       }
+    }
 
     onRefresh() {
         this.setState({ refreshing: true });
@@ -78,14 +78,17 @@ class Profile extends React.Component {
 
     render() {
         return(
-            <View style={styles.profile}>
+            <ScrollView style={styles.profile}>
                 <Text>This is Profile Page</Text>
                 <View style={styles.info}>
                     <Text style={[styles.text, styles.bold]}>User ID: {this.state.userInfo.id}</Text>
                     <Text style={styles.text}>Name: {this.state.userInfo.name}</Text>
                     <Text style={styles.text}>Email: {this.state.userInfo.email}</Text>
+                    <Text style={styles.text}>Birth date: {this.state.userInfo.birth_date}</Text>
+                    <Text style={styles.text}>Gender: {this.state.userInfo.gender}</Text>
+                    <Text style={styles.text}>Phone number: {this.state.userInfo.phone_number}</Text>
+                    <Text style={styles.text}>Postcode: {this.state.userInfo.postcode}</Text>
                     <Text style={[styles.text, styles.bold]}>User Type: {this.state.userInfo.user_type}</Text>
-                    {/* <Text>Name: {this.state.userInfo.name}</Text> */}
                 </View>
 
                 <View style={styles.detail}>
@@ -93,7 +96,7 @@ class Profile extends React.Component {
                         title="View User Details"
                         screenColor="darkgreen"
                         textColor="white"
-                        navigate={ () => this.props.navigation.navigate("Details") }
+                        navigate={ () => this.props.navigation.navigate("AddInfo") }
                     />
                 </View>
 
@@ -126,7 +129,7 @@ class Profile extends React.Component {
                         navigate={ () => this._logoutPressed() }
                     />
                 </View>
-            </View>
+            </ScrollView>
         );
     }
 }
@@ -173,28 +176,28 @@ const styles = {
     },
 }
 
-// Get Info
-
-const mapStateToProps = (store) => ({
-    // getUserSession: Actions.getUserSession(store),
-    getGetInfoData: Actions.getGetInfoData(store),
-});
-
-const mapDispatchToProps = {
-    onResetUserSession: Actions.resetUserSession,
-    onGetInfo: Actions.getInfo,
-};
-
-// // Get Full
+// // Get Info
 
 // const mapStateToProps = (store) => ({
 //     // getUserSession: Actions.getUserSession(store),
-//     getGetFullData: Actions.getGetFullData(store),
+//     getGetInfoData: Actions.getGetInfoData(store),
 // });
 
 // const mapDispatchToProps = {
 //     onResetUserSession: Actions.resetUserSession,
-//     onGetFull: Actions.getFull,
+//     onGetInfo: Actions.getInfo,
 // };
+
+// Get Full
+
+const mapStateToProps = (store) => ({
+    // getUserSession: Actions.getUserSession(store),
+    getGetFullData: Actions.getGetFullData(store),
+});
+
+const mapDispatchToProps = {
+    onResetUserSession: Actions.resetUserSession,
+    onGetFull: Actions.getFull,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps) (Profile);

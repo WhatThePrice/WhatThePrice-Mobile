@@ -12,11 +12,12 @@ const getFullUrl = endpoint => {
     return "https://laravel-sandbox-whattheprice.herokuapp.com/" + endpoint;
 };
 
-const fetchApi = (method, endpoint, params, headers) =>
+const fetchApi = (method, fullURL, endpoint, params, headers) =>
     axios({
         method,
         headers: headers || getHeader(),
         url: getFullUrl(endpoint),
+        // url: fullURL + endpoint,
         data: params
     })
         .then(response => ({ response }))

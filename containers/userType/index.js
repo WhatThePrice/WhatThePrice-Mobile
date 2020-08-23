@@ -26,7 +26,7 @@ class UserType extends React.Component {
     componentDidUpdate(prevProps) {
         const { getPremiumUpgradeData } = this.props;
 
-        // Login
+        // User Type
         if(prevProps.getPremiumUpgradeData.isLoading && !getPremiumUpgradeData.isLoading) {
             this.setState({ loading: false });
             console.log("Premium Upgrade Data", getPremiumUpgradeData);
