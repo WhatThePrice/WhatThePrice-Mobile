@@ -8,12 +8,14 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 // import our container
-import Auth from "containers/auth";
-import Dashboard from "containers/dashboard";
-import Profile from "containers/profile";
-import UserType from "containers/userType";
-import Result from "containers/result";
-import AddInfo from "containers/addInfo";
+import Auth from "containers/LogInRegister/auth";
+import Dashboard from "containers/Home/dashboard";
+import Profile from "containers/UserInfo/profile";
+import UserType from "containers/UserInfo/userType";
+import Result from "containers/Home/result";
+import AddInfo from "containers/UserInfo/addInfo";
+
+import ListView from "containers/Home/listView";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -65,6 +67,10 @@ class Navigator extends React.Component {
         return(
             <NavigationContainer>
                 <Stack.Navigator>
+                    <Stack.Screen
+                        name="ListView"
+                        component={ListView}
+                    />
                     <Stack.Screen
                         name="Auth"
                         component={Auth}

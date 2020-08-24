@@ -5,7 +5,7 @@ class InputButton extends React.Component {
     render() {
         return(
             <TouchableOpacity
-                style={[styles.button, { backgroundColor: this.props.screenColor }]}
+                style={[styles.button, { backgroundColor: this.props.screenColor, width: this.props.width }]}
                 onPress={this.props.navigate}
                 disabled={this.props.loading}
             >

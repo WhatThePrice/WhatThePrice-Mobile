@@ -93,7 +93,7 @@ class Profile extends React.Component {
 
                 <View style={styles.detail}>
                     <InputButton
-                        title="View User Details"
+                        title="Edit Personal Details"
                         screenColor="darkgreen"
                         textColor="white"
                         navigate={ () => this.props.navigation.navigate("AddInfo") }
