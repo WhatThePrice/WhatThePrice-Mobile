@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 // import our container
 import Auth from "containers/LogInRegister/auth";
@@ -13,14 +14,16 @@ import Dashboard from "containers/Home/dashboard";
 import Profile from "containers/UserInfo/profile";
 import UserType from "containers/UserInfo/userType";
 import Result from "containers/Home/result";
-import AddInfo from "containers/UserInfo/addInfo";
+import Information from "containers/UserInfo/addInfo";
 
 import ListView from "containers/Home/listView";
+import Test from "containers/Home/test";
+import Track from "containers/Tracking/track";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-class BottomTab extends React.Component {
+class WhatThePrice extends React.Component {
     render() {
         return(
             <Tab.Navigator
@@ -32,12 +35,25 @@ class BottomTab extends React.Component {
                 }}
             >
                 <Tab.Screen
-                    name="Dashboard"
-                    component={Dashboard}
+                    name="Home"
+                    component={ListView}
                     options={{
                         tabBarIcon: ({focused, color}) => (
                             <MaterialCommunityIcons
                                 name = {focused ? ("home"): ("home-outline")}
+                                size = "20"
+                                color = {color}
+                            />
+                        )
+                    }}
+                />
+                <Tab.Screen
+                    name="Track"
+                    component={Track}
+                    options={{
+                        tabBarIcon: ({focused, color}) => (
+                            <AntDesign
+                                name = {focused ? ("clockcircle"): ("clockcircleo")}
                                 size = "20"
                                 color = {color}
                             />
@@ -67,17 +83,17 @@ class Navigator extends React.Component {
         return(
             <NavigationContainer>
                 <Stack.Navigator>
-                    <Stack.Screen
+                    {/* <Stack.Screen
                         name="ListView"
                         component={ListView}
-                    />
+                    /> */}
                     <Stack.Screen
-                        name="Auth"
+                        name="Authentication"
                         component={Auth}
                     />
                     <Stack.Screen
-                        name="BottomTab"
-                        component={BottomTab}
+                        name="What The Price"
+                        component={WhatThePrice}
                     />
                     <Stack.Screen
                         name="UserType"
@@ -88,8 +104,8 @@ class Navigator extends React.Component {
                         component={Result}
                     />
                     <Stack.Screen
-                        name="AddInfo"
-                        component={AddInfo}
+                        name="Information"
+                        component={Information}
                     />
                 </Stack.Navigator>
             </NavigationContainer>

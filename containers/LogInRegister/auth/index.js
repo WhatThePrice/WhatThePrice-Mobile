@@ -24,7 +24,7 @@ class Auth extends React.Component {
         console.log("DID MOUNT", this.props.getUserSession);
         const { getUserSession } = this.props;
         if(Object.keys(getUserSession.data).length != 0) {
-            this.props.navigation.navigate("BottomTab");
+            this.props.navigation.navigate("What The Price");
         }
     }
     componentDidUpdate(prevProps) {
@@ -42,11 +42,11 @@ class Auth extends React.Component {
                 Alert.alert("Success", "Login successful", [
                     {
                         text: "To Dash",
-                        onPress: () => this.props.navigation.navigate("BottomTab"),
+                        onPress: () => this.props.navigation.navigate("What The Price"),
                     },
                 ]);
             } else if(getLoginData.error != null) {
-              Alert.alert("Failed", "Login failed");
+              Alert.alert("Failed", "Incorrect email or password");
             }
         }
 
@@ -67,8 +67,10 @@ class Auth extends React.Component {
     }
     _buttonPressed() {
         const data = {
-            email: this.state.email,
-            password: this.state.password,
+            // email: this.state.email,
+            // password: this.state.password,
+            email: "jam@mail.com",
+            password: "123456",
         }
         this.setState({ loading: true });
         this.props.onLogin(data);
@@ -145,7 +147,7 @@ class Auth extends React.Component {
                             title="Login"
                             screenColor="darkgreen"
                             textColor="white"
-                            // navigate={ () => this.props.navigation.navigate("BottomTab") }
+                            // navigate={ () => this.props.navigation.navigate("What The Price") }
                             navigate = {() => this._buttonPressed()}
                         />
                     </View>
@@ -192,7 +194,7 @@ class Auth extends React.Component {
                             title="Register"
                             screenColor="darkgreen"
                             textColor="white"
-                            // navigate={ () => this.props.navigation.navigate("BottomTab") }
+                            // navigate={ () => this.props.navigation.navigate("What The Price") }
                             navigate = {() => this._buttonPressed2()}
                         />
                     </View>

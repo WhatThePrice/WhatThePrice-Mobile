@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
 
 import InputButton from "components/inputButton";
 
@@ -26,7 +26,7 @@ import ProductCard from "components/cards/productCard";
 import ProductList from "components/lists/productList";
 
 // Data
-import dummyData from "assets/dummyData";
+// import dummyData from "assets/dummyData";
 
 class ListView extends React.Component{
     constructor(props){
@@ -37,41 +37,48 @@ class ListView extends React.Component{
             queryCalled: false,
             
             // user
-            userID: "",
+            userID: 1,
             
             // results
             results:[],
-            countResults:0, 
+            countResults:0,
             selectedItem:0,
             viewType:"list", //listView by default
-            sorted: true //sort to cheap first by default
+            sorted: true, //sort to cheap first by default
+
+            loading: false,
         }
     }
 
-    // componentDidUpdate(prevProps){
-    //     const { getResultData } = this.props;
-    //     if (prevProps.getResultData.isLoading && !getResultData.isLoading){
-    //         console.log(getResultData.data)
-    //         if (getResultData.data.status_code === "200") { 
-    //             this.setState({
-    //                 results:getResultData.data.data,
-    //                 countResults:getResultData.data.analytics[0].result_count,
+    componentDidUpdate(prevProps){
+        const { getResultData } = this.props;
+        // console.log("DID UPDATE RESULT", getResultData.data)
+        if (prevProps.getResultData.isLoading && !getResultData.isLoading){
+            this.setState({ loading: false });
+            console.log("DID UPDATE RESULT", getResultData.data)
+            if (getResultData.data.status_code === 200) { 
+                console.log("GET RESULT", getResultData);
+                this.setState({
+                    results:getResultData.data.data,
+                    countResults:getResultData.data.analytics.result_count,
                     
-    //             }, () => console.log(this.state.countResults, getResultData.data.analytics[0].result_count))
-    //         }
-    //     }
-    // }
+                }, () => console.log(this.state.countResults, getResultData.data.analytics.result_count))
+            }
+        }
+    }
 
     // when 'search' button is pressed, 
         // save query to state
         // set querycalled to true
     queryPressed() {
         const data = {
-            query:this.state.queryText,
-            userID:this.state.userID
+            // query:this.state.queryText,
+            query:"PS4 Red Dead Redemption 2",
+            userID:this.state.userID,
         }
-        // this.props.onResult(data)
-        this.setState({queryCalled:!this.state.queryCalled})
+        this.setState({ loading: true });
+        this.props.onResult(data);
+        this.setState({queryCalled:!this.state.queryCalled});
     }
 
     // when item selected, set selectedItem to product unique id
@@ -95,65 +102,44 @@ class ListView extends React.Component{
                 {this.state.queryCalled === false ? (
                     // if not query called, show only search bar
                     <SearchBar 
-                        onChange={(queryText) => this.setState({queryText:queryText.target.value})}
-                        noQuery={!this.state.queryCalled}
+                        title="Search"
+                        textInput="Search Product:"
+                        inputPlaceHolder="product..."
+                        // loading={this.state.loading}
+                        onChange={(queryText) => this.setState({queryText})}
+                        // noQuery={!this.state.queryCalled}
                         onPress={() => this.queryPressed()}
                     />
                 ) : (
                     // if query called, show search bar on top and display results in list by default
-                    <View
-                        style={styles.page}
-                    >
-                        <SearchBar 
-                            onChange={(queryText) => this.setState({queryText:queryText.target.value})}
-                            noQuery={!this.state.queryCalled}
-                            onPress={() => this.queryPressed()}
-                        />
-                        <View
-                            // className="container"
-                            style={styles.container}
-                        >
-                            <View className="resultContainer">
-                            
-                                {/* show queryText and no of result */}
-                                <View className="queryText">
-                                    <Text>Query Text: {this.state.queryText}</Text>
-                                    <Text className="querySum">Results: ({this.state.countResults} results)</Text>
-                                </View>
+                        <View>
+                            <View>
+                                <SearchBar
+                                    title="Back To Search"
+                                    textInput="Searched Product:"
+                                    inputPlaceHolder={this.state.queryText}
+                                    loading={this.state.loading}
+                                    onChange={(queryText) => this.setState({queryText})}
+                                    // noQuery={!this.state.queryCalled}
+                                    onPress={() => this.queryPressed()}
+                                />
+                            </View>
+                            {/* show queryText and no of result */}
+                            <View style={styles.queryresults}>
+                                <Text style={styles.bold}>Query Text: {this.state.queryText}</Text>
+                                <Text>Results: ({this.state.countResults} results)</Text>
+                            </View>
                                 
-                                {/* card to show selectedItem */}
-                                {/* <View className="cardHolder">
-                                    <View>
-                                        {dummyData.length === 0 ? (<ProductCard />) : (
-                                            dummyData
-                                            .filter((item) => item.id === this.state.selectedItem)
-                                            .map((item) => (
-                                                <ProductCard 
-                                                    key={item.id}
-                                                    platform={item.platform}
-                                                    name={item.name}
-                                                    brand={item.brand}
-                                                    image={item.image_url}
-                                                    price={item.price}
-                                                    product_id={item.product_id}
-                                                    url={item.url}
-                                                />
-                                            ))
-                                        )}
-                                    </View>
-                                </View> */}
 
                                 {/* show all results, listView by default */}
                                 <View className="allResultsContainer">
 
                                     <View className="allResultsHeader">
-                                        <Text>Results Header</Text>
                                         <View className="filterHolder">
                                             {/* to sort */}
-                                            <Text>Sort by</Text>
+                                            <Text>Sorting: {this.state.sorted ? "Lowest to Highest" : "Highest to Lowest"}</Text>
                                             <InputButton
-                                                // className="sortBtn"
-                                                title={this.state.sorted ? "Sort: Decrease" : "Sort: Increase"}
+                                                title={this.state.sorted ? "Change To Decrease" : "Change To Increase"}
                                                 textColor="white"
                                                 screenColor="darkgreen"
                                                 navigate={() => this.sortGraph()}
@@ -161,11 +147,9 @@ class ListView extends React.Component{
 
                                             {/* view type selector */}
                                             <View
-                                                // className="selectorBtnHolder"
                                                 style={styles.selectorBtnHolder}
                                             >
                                                 <InputButton
-                                                    // className="selectorBtn"
                                                     title="Graph"
                                                     textColor="white"
                                                     screenColor="darkgreen"
@@ -174,7 +158,6 @@ class ListView extends React.Component{
                                                     style={{backgroundColor:this.state.viewType === "graph" && "darkgray"}}
                                                 />
                                                 <InputButton
-                                                    // className="selectorBtn"
                                                     title="List"
                                                     textColor="white"
                                                     screenColor="darkgreen"
@@ -187,12 +170,11 @@ class ListView extends React.Component{
                                     </View>
                                     {this.state.viewType === "list" && (
                                         <View
-                                            // className="listHolder"
                                             style={styles.lists}
                                         >
                                             <Text style={styles.sorting}>Price: {this.state.sorted ? "Lowest to Highest" : "Highest to Lowest"}</Text>
-                                            {dummyData.length === 0 ? (<Text>no result found</Text>) : (
-                                                dummyData
+                                            {this.state.results.length === 0 ? (<Text>no result found</Text>) : (
+                                                this.state.results
                                                     .sort((a,b) => this.state.sorted ? a.price - b.price : b.price - a.price )
                                                     .map((item, index) => (
                                                         <ProductList
@@ -205,6 +187,7 @@ class ListView extends React.Component{
                                                             price={item.price}
                                                             product_id={item.product_id}
                                                             url={item.url}
+                                                            company={item.platform}
                                                             onHover={() => this.onItemSelected(item.id)}
                                                         />
                                                     ))) 
@@ -213,7 +196,6 @@ class ListView extends React.Component{
                                     )}
                                     {this.state.viewType === "graph" && (
                                         <View
-                                            // className="graphHolder"
                                             style={styles.graphHolder}
                                         >
                                             <Text style={styles.sorting}>Price: {this.state.sorted ? "Lowest to Highest" : "Highest to Lowest"}</Text>
@@ -227,7 +209,7 @@ class ListView extends React.Component{
                                                     tickFormat={(y) => `RM${y}`}
                                                 />
                                                 <VictoryBar
-                                                    data={dummyData.sort((a,b) => this.state.sorted ? a.price - b.price : b.price - a.price )}
+                                                    data={this.state.results.sort((a,b) => this.state.sorted ? a.price - b.price : b.price - a.price )}
                                                     y={"price"}
                                                     style={{ data:{fill: "#219653"} }}
                                                     barRatio={0.8}
@@ -235,7 +217,7 @@ class ListView extends React.Component{
                                                     animate={{duration: 2000, onLoad: { duration: 1000 }}}
                                                     labels={({datum}) => `RM${datum.price} from ${datum.platform}`}
                                                     labelComponent={
-                                                    <VictoryTooltip 
+                                                    <VictoryTooltip
                                                         style={{fontSize:"10"}}
                                                         pointerLength={5} />
                                                     }
@@ -258,9 +240,7 @@ class ListView extends React.Component{
                                         </View>
                                     )}
                                 </View>
-                            </View>
                         </View>
-                    </View>
                 )}
             </ScrollView>
         )
@@ -269,13 +249,8 @@ class ListView extends React.Component{
 
 const styles = {
     container: {
-        width: "100%",
-        paddingHorizontal: 20,
-        backgroundColor: "yellow",
-    },
-    page: {
-        width: "100%",
-        height: "100%",
+        flex:1,
+        padding: 20,
         // backgroundColor: "yellow",
     },
     lists: {
@@ -286,28 +261,37 @@ const styles = {
     },
     listHolder: {
         width: "100%",
-        backgroundColor: "orange",
+        backgroundColor: "lightgreen",
         marginVertical: 20,
+        padding: 20,
+        borderWidth: 2,
+        borderColor: "darkgreen",
     },
     selectorBtnHolder: {
         width: "100%",
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-around",
-        backgroundColor: "brown",
+        // backgroundColor: "brown",
         marginVertical: 20,
     },
     graphHolder: {
         alignItems: "center",
     },
+    queryresults: {
+        marginVertical: 20,
+    },
+    bold: {
+        fontWeight: "bold",
+    },
 }
 
-// const mapStateToProps = (store) => ({
-//     getResultData: Actions.getResultData(store)
-// })
-// const mapDispatchToProps = {
-//     onResult:Actions.result
-// }
+const mapStateToProps = (store) => ({
+    getResultData: Actions.getResultData(store)
+})
+const mapDispatchToProps = {
+    onResult:Actions.result
+}
 
-// export default connect( mapStateToProps , mapDispatchToProps )(ListView)
-export default ListView;
+export default connect( mapStateToProps , mapDispatchToProps )(ListView)
+// export default ListView;

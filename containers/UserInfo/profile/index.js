@@ -50,6 +50,42 @@ class Profile extends React.Component {
            };
         //    this.setState({ todoList: getGetFullData.data.list });
        }
+
+       // Premium Upgrade
+       const { getPremiumUpgradeData } = this.props;
+
+        // User Type
+        if(prevProps.getPremiumUpgradeData.isLoading && !getPremiumUpgradeData.isLoading) {
+            this.setState({ loading: false });
+            console.log("Premium Upgrade Data", getPremiumUpgradeData);
+            if(
+                Object.keys(getPremiumUpgradeData.data).length != 0 &&
+                getPremiumUpgradeData.data != null
+            ) {
+                console.log("TIME is ", getPremiumUpgradeData.data);
+                Alert.alert("Success", "Premium Subscribed");
+            } else if(getPremiumUpgradeData.error != null) {
+              Alert.alert("Failed", "Premium upgrade failed");
+            }
+        }
+
+        // Premium Downgrade
+       const { getPremiumDowngradeData } = this.props;
+
+       // User Type
+       if(prevProps.getPremiumDowngradeData.isLoading && !getPremiumDowngradeData.isLoading) {
+           this.setState({ loading: false });
+           console.log("Premium Downgrade Data", getPremiumDowngradeData);
+           if(
+               Object.keys(getPremiumDowngradeData.data).length != 0 &&
+               getPremiumDowngradeData.data != null
+           ) {
+               console.log("TIME is ", getPremiumDowngradeData.data);
+               Alert.alert("Success", "Premium Cancelled");
+           } else if(getPremiumDowngradeData.error != null) {
+             Alert.alert("Failed", "Premium downgrade failed");
+           }
+       }
     }
 
     onRefresh() {
@@ -63,7 +99,21 @@ class Profile extends React.Component {
     }
 
     _upgradePressed() {
-        Alert.alert("Upgraded", "Congratulations");
+        const data = {
+            type: this.state.type,
+        }
+        this.setState({ loading: true });
+        this.props.onPremiumUpgrade(data);
+        console.log(data);
+    }
+
+    _downgradePressed() {
+        const data = {
+            type: this.state.type,
+        }
+        this.setState({ loading: true });
+        this.props.onPremiumDowngrade(data);
+        console.log(data);
     }
 
     _logoutPressed() {
@@ -71,7 +121,7 @@ class Profile extends React.Component {
         Alert.alert("Bye-bye", "Logout Successful", [
             {
                 text: "Login Page",
-                onPress: () => this.props.navigation.navigate("Auth"),
+                onPress: () => this.props.navigation.navigate("Authentication"),
             }
         ]);
     }
@@ -79,15 +129,18 @@ class Profile extends React.Component {
     render() {
         return(
             <ScrollView style={styles.profile}>
-                <Text>This is Profile Page</Text>
+                {/* <Text>This is Profile Page</Text> */}
                 <View style={styles.info}>
+                    <Text style={[styles.title, styles.bold]}>Profile</Text>
                     <Text style={[styles.text, styles.bold]}>User ID: {this.state.userInfo.id}</Text>
                     <Text style={styles.text}>Name: {this.state.userInfo.name}</Text>
                     <Text style={styles.text}>Email: {this.state.userInfo.email}</Text>
+                    <Text style={[styles.title, styles.bold, styles.space]}>Additional Details</Text>
                     <Text style={styles.text}>Birth date: {this.state.userInfo.birth_date}</Text>
                     <Text style={styles.text}>Gender: {this.state.userInfo.gender}</Text>
                     <Text style={styles.text}>Phone number: {this.state.userInfo.phone_number}</Text>
                     <Text style={styles.text}>Postcode: {this.state.userInfo.postcode}</Text>
+                    <Text style={[styles.title, styles.bold, styles.space]}>Subscription</Text>
                     <Text style={[styles.text, styles.bold]}>User Type: {this.state.userInfo.user_type}</Text>
                 </View>
 
@@ -96,7 +149,7 @@ class Profile extends React.Component {
                         title="Edit Personal Details"
                         screenColor="darkgreen"
                         textColor="white"
-                        navigate={ () => this.props.navigation.navigate("AddInfo") }
+                        navigate={ () => this.props.navigation.navigate("Information") }
                     />
                 </View>
 
@@ -106,7 +159,7 @@ class Profile extends React.Component {
                         title="Cancel Premium"
                         screenColor="silver"
                         textColor="black"
-                        navigate={ () => this.props.navigation.navigate("UserType") }
+                        navigate={ () => this._downgradePressed() }
                     />
                 </View>
                 ) : (
@@ -115,7 +168,7 @@ class Profile extends React.Component {
                             title="Upgrade To Premium"
                             screenColor="gold"
                             textColor="black"
-                            navigate={ () => this.props.navigation.navigate("UserType") }
+                            navigate={ () => this._upgradePressed() }
                             // navigate={ () => [this._upgradePressed(), this.props.navigation.navigate("UserType")] }
                         />
                     </View>
@@ -148,9 +201,17 @@ const styles = {
     bold: {
         fontWeight: "bold",
     },
-    text: {
+    title: {
         fontSize: 20,
-        marginVertical: 20,
+        textDecorationLine: "underline",
+        marginBottom: 5,
+    },
+    text: {
+        fontSize: 15,
+        marginVertical: 5,
+    },
+    space: {
+        marginTop: 10,
     },
     detail: {
         width: "100%",
@@ -161,13 +222,13 @@ const styles = {
         width: "100%",
         paddingHorizontal: 20,
         paddingVertical: 20,
-        backgroundColor: "darkblue",
+        // backgroundColor: "darkblue",
     },
     premium: {
         width: "100%",
         paddingHorizontal: 20,
         paddingVertical: 20,
-        backgroundColor: "skyblue",
+        // backgroundColor: "skyblue",
     },
     logout: {
         width: "100%",
@@ -193,11 +254,15 @@ const styles = {
 const mapStateToProps = (store) => ({
     // getUserSession: Actions.getUserSession(store),
     getGetFullData: Actions.getGetFullData(store),
+    getPremiumUpgradeData: Actions.getPremiumUpgradeData(store),
+    getPremiumDowngradeData: Actions.getPremiumDowngradeData(store),
 });
 
 const mapDispatchToProps = {
     onResetUserSession: Actions.resetUserSession,
     onGetFull: Actions.getFull,
+    onPremiumUpgrade: Actions.premiumUpgrade,
+    onPremiumDowngrade: Actions.premiumDowngrade,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps) (Profile);

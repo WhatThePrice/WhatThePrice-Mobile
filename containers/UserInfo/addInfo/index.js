@@ -10,7 +10,7 @@ import InputButton from "components/inputButton";
 import { connect } from "react-redux";
 import Actions from "actions";
 
-class AddInfo extends React.Component {
+class Information extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -29,7 +29,7 @@ class AddInfo extends React.Component {
         // console.log("DID MOUNT", this.props.getUserSession);
         // const { getUserSession } = this.props;
         // if(Object.keys(getUserSession.data).length != 0) {
-        //     this.props.navigation.navigate("BottomTab");
+        //     this.props.navigation.navigate("What The Price");
         // }
     }
     componentDidUpdate(prevProps) {
@@ -47,7 +47,7 @@ class AddInfo extends React.Component {
                 Alert.alert("Success", "Information changed", [
                     {
                         text: "To Profile",
-                        onPress: () => this.props.navigation.navigate("BottomTab"),
+                        onPress: () => this.props.navigation.navigate("What The Price"),
                     },
                 ]);
             } else if(getEditAllData.error != null) {
@@ -69,7 +69,7 @@ class AddInfo extends React.Component {
     render() {
         return(
             <View>
-                <Text>This is Edit info</Text>
+                {/* <Text>This is Edit info</Text> */}
                 <View style={styles.section}>
                     <View>
                         <Text>Birth Date</Text>
@@ -125,7 +125,7 @@ class AddInfo extends React.Component {
                     />
                     <InputButton
                         loading={this.state.loading}
-                        title="Edit Details"
+                        title="Submit"
                         textColor="white"
                         screenColor="darkgreen"
                         navigate={ () => this._editPressed() }
@@ -151,4 +151,4 @@ const mapDispatchToProps = {
     onEditAll: Actions.editAll,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps) (AddInfo);
+export default connect(mapStateToProps, mapDispatchToProps) (Information);

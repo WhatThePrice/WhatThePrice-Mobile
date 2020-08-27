@@ -10,7 +10,7 @@ import InputButton from "components/inputButton";
 class SearchBar extends React.Component{
     render() {
         return(
-            <View className="searchBarContainer"
+            <View 
                 style={{
                     height: this.props.noQuery && 200,
                     marginTop: this.props.noQuery && 100,
@@ -25,15 +25,20 @@ class SearchBar extends React.Component{
                     // style={styles.inputHolder}
                 >
                     <TextInputComponent 
-                        inputPlaceHolder="query"
-                        onChangeText={this.props.onChange}
+                        inputPlaceHolder={this.props.inputPlaceHolder}
+                        // onChange={this.props.onChange}
                         style={styles.searchInput}
+                        textInput={this.props.textInput}
+                        inputKeyType="default"
+                        inputSecure={false}
+                        onChange={this.props.onChange}
                     />
                     <InputButton
-                        title="Search"
+                        loading={this.props.loading}
+                        title={this.props.title}
                         textColor="white"
                         screenColor="darkgreen"
-                        navigate={this.props.onPress}
+                        navigate={(this.props.onPress)}
                     />
                 </View>
             </View>
@@ -47,7 +52,7 @@ const styles = {
         paddingHorizontal: 20,
     },
     searchInput: {
-        margin: "0 auto",
+        // margin: "0 auto",
     },
 }
 

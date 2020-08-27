@@ -8,7 +8,7 @@ import {getStore} from '../../store/configureStore';
 
 // import { encode } from "../../services/encryption";
 
-function* premiumUpgrade({ data }) {
+function* premiumDowngrade({ data }) {
     let store = getStore().getState();
     let token = Actions.getUserSession(store).data;
     const headers = { Authorization: `Bearer ${token}` };
@@ -18,23 +18,23 @@ function* premiumUpgrade({ data }) {
     console.log("SAGA data is", data.type);
     // formData.append("type", data.type);
 
-    const { response, error } = yield call(api.premiumUpgrade, formData, headers);
+    const { response, error } = yield call(api.premiumDowngrade, formData, headers);
     console.log("premium upgrade saga", response, error);
 
     // if response status is success then we will update the reducer
     if(response && response.data.status === 'success') {
-        yield put(Actions.premiumUpgradeSuccess(response.data));
+        yield put(Actions.premiumDowngradeSuccess(response.data));
         yield put(Actions.getFull());
     }
     if(error) {
-        yield put(Actions.premiumUpgradeFail(error.response));
+        yield put(Actions.premiumDowngradeFail(error.response));
     }
 }
 
-function* watchPremiumUpgrade() {
-  yield takeLatest(Actions.PREMIUM_UPGRADE, premiumUpgrade);
+function* watchPremiumDowngrade() {
+  yield takeLatest(Actions.PREMIUM_DOWNGRADE, premiumDowngrade);
 }
 
 export default function* submit() {
-  yield all([fork(watchPremiumUpgrade)]);
+  yield all([fork(watchPremiumDowngrade)]);
 }
