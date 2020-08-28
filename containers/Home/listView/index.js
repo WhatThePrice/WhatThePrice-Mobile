@@ -1,10 +1,14 @@
 import React from "react";
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
 
 import InputButton from "components/inputButton";
 
 import { connect } from "react-redux";
 import Actions from "actions";
+
+import Entypo from 'react-native-vector-icons/Entypo';
+import Feather from 'react-native-vector-icons/Feather';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 // Victory
 import { 
@@ -24,6 +28,7 @@ import {
 import SearchBar from "components/searchBar";
 import ProductCard from "components/cards/productCard";
 import ProductList from "components/lists/productList";
+import Header from "components/header";
 
 // Data
 // import dummyData from "assets/dummyData";
@@ -37,7 +42,7 @@ class ListView extends React.Component{
             queryCalled: false,
             
             // user
-            userID: 1,
+            userID: '',
             
             // results
             results:[],
@@ -47,12 +52,20 @@ class ListView extends React.Component{
             sorted: true, //sort to cheap first by default
 
             loading: false,
+            userInfo: [],
+            press: true,
         }
     }
 
+    // Get Full
+
+    componentDidMount() {
+        this.props.onGetFull();
+    }
+
     componentDidUpdate(prevProps){
+        // Result
         const { getResultData } = this.props;
-        // console.log("DID UPDATE RESULT", getResultData.data)
         if (prevProps.getResultData.isLoading && !getResultData.isLoading){
             this.setState({ loading: false });
             console.log("DID UPDATE RESULT", getResultData.data)
@@ -65,6 +78,29 @@ class ListView extends React.Component{
                 }, () => console.log(this.state.countResults, getResultData.data.analytics.result_count))
             }
         }
+
+        // Get Full
+        const { getGetFullData } = this.props;
+        if(prevProps.getGetFullData.isLoading && !getGetFullData.isLoading) {
+            this.setState({ refreshing: false });
+            console.log("DID UPDATE USER FULL yes" ,getGetFullData)
+            if(getGetFullData.data.status === "success"){
+                    this.setState({ userInfo: getGetFullData.data.userProfile[0] });
+            }
+        }
+
+        // Save Product
+        const { getSaveProductData } = this.props;
+        if(prevProps.getSaveProductData.isLoading && !getSaveProductData.isLoading) {
+            // this.setState({ loading: false });
+            console.log("DID UPDATE Save Product yes", getSaveProductData);
+            if(getSaveProductData.data.status === "success") {
+                console.log("TIME is ", getSaveProductData.data);
+                Alert.alert("Success", "Product saved");
+            } else if(getSaveProductData.error != null) {
+              Alert.alert("Failed", "Edit Info failed");
+            }
+        }
     }
 
     // when 'search' button is pressed, 
@@ -72,9 +108,9 @@ class ListView extends React.Component{
         // set querycalled to true
     queryPressed() {
         const data = {
-            // query:this.state.queryText,
-            query:"PS4 Red Dead Redemption 2",
-            userID:this.state.userID,
+            query:this.state.queryText,
+            // query: "PS4 God Of War",
+            userID: this.state.userInfo.id,
         }
         this.setState({ loading: true });
         this.props.onResult(data);
@@ -96,23 +132,40 @@ class ListView extends React.Component{
         this.setState({sorted:!this.state.sorted})
     }
 
+    // to track
+    _tracking() {
+        // const data = {
+        //     product_url: this.state.results.url,
+        //     product_name: this.state.results.name,
+        // }
+        this.setState({ press:!this.state.press });
+        // this.props.onSaveProduct(data);
+        // console.log(data);
+    }
+
     render() {
         return(
-            <ScrollView style={styles.container}>
+            <ScrollView>
                 {this.state.queryCalled === false ? (
-                    // if not query called, show only search bar
-                    <SearchBar 
-                        title="Search"
-                        textInput="Search Product:"
-                        inputPlaceHolder="product..."
-                        // loading={this.state.loading}
-                        onChange={(queryText) => this.setState({queryText})}
-                        // noQuery={!this.state.queryCalled}
-                        onPress={() => this.queryPressed()}
-                    />
+                    <View>
+                        <Header />
+                        {/* // if not query called, show only search bar */}
+                        <View style={styles.container}>
+                            <SearchBar 
+                                title="Search"
+                                textInput="Search Product:"
+                                inputPlaceHolder="product..."
+                                clearButton="always"
+                                // loading={this.state.loading}
+                                onChange={(queryText) => this.setState({queryText})}
+                                // noQuery={!this.state.queryCalled}
+                                onPress={() => this.queryPressed()}
+                            />
+                        </View>
+                    </View>
                 ) : (
                     // if query called, show search bar on top and display results in list by default
-                        <View>
+                        <View style={styles.container}>
                             <View>
                                 <SearchBar
                                     title="Back To Search"
@@ -121,6 +174,7 @@ class ListView extends React.Component{
                                     loading={this.state.loading}
                                     onChange={(queryText) => this.setState({queryText})}
                                     // noQuery={!this.state.queryCalled}
+                                    display="none"
                                     onPress={() => this.queryPressed()}
                                 />
                             </View>
@@ -134,38 +188,98 @@ class ListView extends React.Component{
                                 {/* show all results, listView by default */}
                                 <View className="allResultsContainer">
 
-                                    <View className="allResultsHeader">
-                                        <View className="filterHolder">
-                                            {/* to sort */}
-                                            <Text>Sorting: {this.state.sorted ? "Lowest to Highest" : "Highest to Lowest"}</Text>
-                                            <InputButton
+                                    <View
+                                        style={styles.headerContainer}
+                                    >
+                                        {/* to sort */}
+                                        <View
+                                            style={styles.varyButton}
+                                        >
+                                            {/* <Text>Sorting: {this.state.sorted ? "Lowest to Highest" : "Highest to Lowest"}</Text> */}
+                                            {/* <InputButton
                                                 title={this.state.sorted ? "Change To Decrease" : "Change To Increase"}
                                                 textColor="white"
                                                 screenColor="darkgreen"
                                                 navigate={() => this.sortGraph()}
-                                            />
-
-                                            {/* view type selector */}
-                                            <View
-                                                style={styles.selectorBtnHolder}
+                                            /> */}
+                                            <TouchableOpacity
+                                                style={{
+                                                    height: 40,
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                    borderRadius: 5,
+                                                    borderWidth: 2,
+                                                    borderColor: "black",
+                                                    backgroundColor: "darkgreen"
+                                                }}
+                                                onPress = {() => this.sortGraph()}
                                             >
-                                                <InputButton
-                                                    title="Graph"
-                                                    textColor="white"
-                                                    screenColor="darkgreen"
-                                                    width = {100}
-                                                    navigate={() => this.changeView("graph")}
-                                                    style={{backgroundColor:this.state.viewType === "graph" && "darkgray"}}
+                                                <AntDesign
+                                                    name = {this.state.sorted ? "arrowup" : "arrowdown"}
+                                                    size = "20"
+                                                    color = "white"
                                                 />
-                                                <InputButton
-                                                    title="List"
-                                                    textColor="white"
-                                                    screenColor="darkgreen"
-                                                    width = {100}
-                                                    navigate={() => this.changeView("list")}
-                                                    style={{backgroundColor:this.state.viewType === "list" && "darkgray"}}
+                                            </TouchableOpacity>
+                                        </View>
+
+                                        {/* view type selector */}
+                                        <View
+                                            style={styles.selectorBtnHolder}
+                                        >
+                                            {/* <InputButton
+                                                title="Graph"
+                                                textColor="white"
+                                                screenColor="darkgreen"
+                                                width = {70}
+                                                navigate={() => this.changeView("graph")}
+                                                style={{backgroundColor:this.state.viewType === "graph" && "darkgray"}}
+                                            /> */}
+                                            <TouchableOpacity
+                                                style = {{ 
+                                                    width: 70,
+                                                    height: 40,
+                                                    backgroundColor: "darkgreen",
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                    borderWidth: 2,
+                                                    borderColor: "black",
+                                                    borderRadius: 5,
+                                                }}
+                                                onPress={() => this.changeView("graph")}
+                                            >
+                                                <Entypo
+                                                    name = "bar-graph"
+                                                    size = "20"
+                                                    color = "white"
                                                 />
-                                            </View>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity
+                                                style = {{ 
+                                                    width: 70,
+                                                    height: 40,
+                                                    backgroundColor: "darkgreen",
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                    borderWidth: 2,
+                                                    borderColor: "black",
+                                                    borderRadius: 5,
+                                                }}
+                                                onPress={() => this.changeView("list")}
+                                            >
+                                                <Feather
+                                                    name = "list"
+                                                    size = "20"
+                                                    color = "white"
+                                                />
+                                            </TouchableOpacity>
+                                            {/* <InputButton
+                                                title="List"
+                                                textColor="white"
+                                                screenColor="darkgreen"
+                                                width = {70}
+                                                navigate={() => this.changeView("list")}
+                                                style={{backgroundColor:this.state.viewType === "list" && "darkgray"}}
+                                            /> */}
                                         </View>
                                     </View>
                                     {this.state.viewType === "list" && (
@@ -188,6 +302,8 @@ class ListView extends React.Component{
                                                             product_id={item.product_id}
                                                             url={item.url}
                                                             company={item.platform}
+                                                            logoName={this.state.press ? ("hearto"): ("heart")}
+                                                            onPress={ () => this._tracking() }
                                                             onHover={() => this.onItemSelected(item.id)}
                                                         />
                                                     ))) 
@@ -199,7 +315,7 @@ class ListView extends React.Component{
                                             style={styles.graphHolder}
                                         >
                                             <Text style={styles.sorting}>Price: {this.state.sorted ? "Lowest to Highest" : "Highest to Lowest"}</Text>
-                                            <VictoryChart domainPadding={{x:[20,20]}} width={300} >
+                                            <VictoryChart domainPadding={{x:[20,20]}} width={350} >
                                                 <VictoryAxis
                                                     dependentAxis
                                                     label="Price"
@@ -215,7 +331,7 @@ class ListView extends React.Component{
                                                     barRatio={0.8}
                                                     alignment="start"
                                                     animate={{duration: 2000, onLoad: { duration: 1000 }}}
-                                                    labels={({datum}) => `RM${datum.price} from ${datum.platform}`}
+                                                    labels={({datum}) => `RM${datum.price} from ${datum.name}`}
                                                     labelComponent={
                                                     <VictoryTooltip
                                                         style={{fontSize:"10"}}
@@ -255,31 +371,42 @@ const styles = {
     },
     lists: {
         alignItems: "center",
+        paddingBottom: 20,
+    },
+    headerContainer: {
+        width: "100%",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
     },
     sorting: {
         fontSize: 20,
+        marginTop: 10,
     },
     listHolder: {
         width: "100%",
         backgroundColor: "lightgreen",
         marginVertical: 20,
-        padding: 20,
+        padding: 15,
         borderWidth: 2,
         borderColor: "darkgreen",
     },
+    varyButton: {
+        width: "40%",
+    },
     selectorBtnHolder: {
-        width: "100%",
+        width: "40%",
         display: "flex",
         flexDirection: "row",
-        justifyContent: "space-around",
+        justifyContent: "space-between",
         // backgroundColor: "brown",
-        marginVertical: 20,
+        // marginVertical: 20,
     },
     graphHolder: {
         alignItems: "center",
     },
     queryresults: {
-        marginVertical: 20,
+        marginVertical: 10,
     },
     bold: {
         fontWeight: "bold",
@@ -287,10 +414,14 @@ const styles = {
 }
 
 const mapStateToProps = (store) => ({
-    getResultData: Actions.getResultData(store)
+    getResultData: Actions.getResultData(store),
+    getGetFullData: Actions.getGetFullData(store),
+    getSaveProductData: Actions.getSaveProductData(store),
 })
 const mapDispatchToProps = {
-    onResult:Actions.result
+    onResult:Actions.result,
+    onGetFull: Actions.getFull,
+    onSaveProduct: Actions.saveProduct,
 }
 
 export default connect( mapStateToProps , mapDispatchToProps )(ListView)

@@ -83,29 +83,56 @@ class Navigator extends React.Component {
         return(
             <NavigationContainer>
                 <Stack.Navigator>
-                    {/* <Stack.Screen
-                        name="ListView"
-                        component={ListView}
-                    /> */}
                     <Stack.Screen
                         name="Authentication"
                         component={Auth}
+                        options={{
+                            headerStyle: {
+                                backgroundColor: '#219653',
+                            },
+                            headerTintColor: '#fff',
+                        }}
                     />
                     <Stack.Screen
                         name="What The Price"
                         component={WhatThePrice}
+                        options={{
+                            headerLeft: null,
+                            headerStyle: {
+                                backgroundColor: '#219653',
+                            },
+                            headerTintColor: '#fff',
+                        }}
                     />
                     <Stack.Screen
                         name="UserType"
                         component={UserType}
+                        options={{
+                            headerStyle: {
+                                backgroundColor: '#219653',
+                            },
+                            headerTintColor: '#fff',
+                        }}
                     />
                     <Stack.Screen
                         name="Result"
                         component={Result}
+                        options={{
+                            headerStyle: {
+                                backgroundColor: '#219653',
+                            },
+                            headerTintColor: '#fff',
+                        }}
                     />
                     <Stack.Screen
                         name="Information"
                         component={Information}
+                        options={{
+                            headerStyle: {
+                                backgroundColor: '#219653',
+                            },
+                            headerTintColor: '#fff',
+                        }}
                     />
                 </Stack.Navigator>
             </NavigationContainer>

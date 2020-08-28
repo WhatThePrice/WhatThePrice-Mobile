@@ -32,6 +32,8 @@ class SearchBar extends React.Component{
                         inputKeyType="default"
                         inputSecure={false}
                         onChange={this.props.onChange}
+                        clearButton={this.props.clearButton}
+                        display={this.props.display}
                     />
                     <InputButton
                         loading={this.props.loading}

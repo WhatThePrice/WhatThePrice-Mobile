@@ -1,9 +1,11 @@
 import React from "react";
-import { View, Text, Alert, FlatList, RefreshControl, ScrollView } from "react-native";
+import { View, Text, Alert, FlatList, RefreshControl, ScrollView, Image } from "react-native";
 import InputButton from "components/inputButton";
 
 import { connect } from "react-redux";
 import Actions from "actions";
+
+import user from "assets/user.png";
 
 class Profile extends React.Component {
     constructor(props) {
@@ -40,19 +42,20 @@ class Profile extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
+        // Get Full
         const { getGetFullData } = this.props;
 
-       console.log("DID UPDATE USER FULL yes" ,getGetFullData)
-       if(prevProps.getGetFullData.isLoading && !getGetFullData.isLoading) {
-           this.setState({ refreshing: false });
-           if(getGetFullData.data.status === "success"){
-                this.setState({ userInfo: getGetFullData.data.userProfile[0] });
-           };
-        //    this.setState({ todoList: getGetFullData.data.list });
-       }
+        console.log("DID UPDATE USER FULL yes" ,getGetFullData)
+        if(prevProps.getGetFullData.isLoading && !getGetFullData.isLoading) {
+            this.setState({ refreshing: false });
+            if(getGetFullData.data.status === "success"){
+                    this.setState({ userInfo: getGetFullData.data.userProfile[0] });
+            };
+            //    this.setState({ todoList: getGetFullData.data.list });
+        }
 
-       // Premium Upgrade
-       const { getPremiumUpgradeData } = this.props;
+        // Premium Upgrade
+        const { getPremiumUpgradeData } = this.props;
 
         // User Type
         if(prevProps.getPremiumUpgradeData.isLoading && !getPremiumUpgradeData.isLoading) {
@@ -70,22 +73,22 @@ class Profile extends React.Component {
         }
 
         // Premium Downgrade
-       const { getPremiumDowngradeData } = this.props;
+        const { getPremiumDowngradeData } = this.props;
 
-       // User Type
-       if(prevProps.getPremiumDowngradeData.isLoading && !getPremiumDowngradeData.isLoading) {
-           this.setState({ loading: false });
-           console.log("Premium Downgrade Data", getPremiumDowngradeData);
-           if(
-               Object.keys(getPremiumDowngradeData.data).length != 0 &&
-               getPremiumDowngradeData.data != null
-           ) {
-               console.log("TIME is ", getPremiumDowngradeData.data);
-               Alert.alert("Success", "Premium Cancelled");
-           } else if(getPremiumDowngradeData.error != null) {
-             Alert.alert("Failed", "Premium downgrade failed");
-           }
-       }
+        // User Type
+        if(prevProps.getPremiumDowngradeData.isLoading && !getPremiumDowngradeData.isLoading) {
+            this.setState({ loading: false });
+            console.log("Premium Downgrade Data", getPremiumDowngradeData);
+            if(
+                Object.keys(getPremiumDowngradeData.data).length != 0 &&
+                getPremiumDowngradeData.data != null
+            ) {
+                console.log("TIME is ", getPremiumDowngradeData.data);
+                Alert.alert("Success", "Premium Cancelled");
+            } else if(getPremiumDowngradeData.error != null) {
+                Alert.alert("Failed", "Premium downgrade failed");
+            }
+        }
     }
 
     onRefresh() {
@@ -130,6 +133,14 @@ class Profile extends React.Component {
         return(
             <ScrollView style={styles.profile}>
                 {/* <Text>This is Profile Page</Text> */}
+                <View style={styles.imageContainer}>
+                    <View style={styles.image}>
+                        <Image
+                            style={{width: 100, resizeMode: "contain", marginTop: 10}}
+                            source={user}
+                        />
+                    </View>
+                </View>
                 <View style={styles.info}>
                     <Text style={[styles.title, styles.bold]}>Profile</Text>
                     <Text style={[styles.text, styles.bold]}>User ID: {this.state.userInfo.id}</Text>
@@ -192,9 +203,27 @@ const styles = {
         height: "100%",
         width: "100%",
     },
+    imageContainer: {
+        width: "100%",
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 20,
+    },
+    image: {
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+        borderWidth: 2,
+        borderColor: "black",
+        // backgroundColor: "orange",
+        justifyContent: "center",
+        alignItems: "center",
+        overflow: "hidden",
+    },
     info: {
         width: "100%",
         marginVertical: 20,
+        // paddingHorizontal: 20,
         justifyContent: "center",
         alignItems: "center",
     },

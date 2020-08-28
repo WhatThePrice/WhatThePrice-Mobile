@@ -45,3 +45,8 @@ const queryAPI = "https://api-sandbox-286406.et.r.appspot.com/api/scraper/query"
 export const result = (data) => {
     return fetchApi("get", queryAPI, `?q=${data.query}&user_id=${data.userID}`);
 }
+
+// save product
+export const saveProduct = (data, headers) => {
+    return fetchApi("post", authURL, "api/tracker/product/save", data, headers);
+};

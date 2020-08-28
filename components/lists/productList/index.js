@@ -43,11 +43,13 @@ class ProductList extends React.Component{
                     </Text>
                     <View className="priceColumn infoColumn" style={[styles.footer, styles.midsection]}>
                         <Text style={{fontWeight: "bold", marginVertical: 5}}>Price: RM{this.props.price}</Text>
-                        <TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={this.props.onPress}
+                        >
                             <AntDesign
                                 // Tracking function
                                 // name = {focused ? ("heart"): ("hearto")}
-                                name={this.props.platform === "lazada" ? ("hearto"): ("heart")}
+                                name={this.props.logoName}
                                 size = "25"
                                 // color = {color}
                                 color = "black"
@@ -70,7 +72,12 @@ class ProductList extends React.Component{
                             onPress={() => { Linking.openURL(`http://${this.props.url}`)}}
                             style={styles.buynow}
                         >
-                            <Text href={`http://${this.props.url}`} target="_blank" rel="noopener noreferrer">BUY NOW</Text>
+                            <Text
+                                href={`http://${this.props.url}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{color: "gold"}}
+                            >BUY NOW</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -102,7 +109,7 @@ const styles = {
         // alignItems: "center",
     },
     details: {
-        width: 225,
+        width: 200,
         // backgroundColor: "skyblue",
         justifyContent: "center",
     },

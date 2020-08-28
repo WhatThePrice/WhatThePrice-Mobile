@@ -5,7 +5,9 @@ class Header extends React.Component {
     render() {
         return(
             <View style={styles.headerContainer}>
-                <Text>What The Price</Text>
+                <Text style={styles.text}>What The Price</Text>
+                {/* <Text style={styles.text}>The</Text>
+                <Text style={styles.text}>Price</Text> */}
             </View>
         );
     }
@@ -13,11 +15,20 @@ class Header extends React.Component {
 
 const styles = StyleSheet.create({
     headerContainer: {
-        height: 50,
+        height: 120,
         width: "100%",
-        backgroundColor: "springgreen",
-        justifyContent: "center",
+        backgroundColor: "#FFFFFF",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: 'space-around',
+        // justifyContent: "center",
         alignItems: "center",
+        // paddingHorizontal: 80,
+    },
+    text: {
+        fontWeight: "bold",
+        fontSize: 50,
+        // marginVertical: 5,
     },
 })
 

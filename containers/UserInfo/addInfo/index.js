@@ -127,7 +127,7 @@ class Information extends React.Component {
                         loading={this.state.loading}
                         title="Submit"
                         textColor="white"
-                        screenColor="darkgreen"
+                        screenColor="#219653"
                         navigate={ () => this._editPressed() }
                     />
                 </View>

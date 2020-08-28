@@ -1,6 +1,8 @@
 import React from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from "react-native";
 
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 class TextInputComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -14,7 +16,7 @@ class TextInputComponent extends React.Component {
                 <Text>{this.props.textInput}</Text>
                 <TextInput
                     placeholder={this.props.inputPlaceHolder}
-                    style={styles.formInput}
+                    style={[styles.formInput, {display:this.props.display}]}
                     keyboardType={this.props.inputKeyType}
                     secureTextEntry={this.props.inputSecure && this.state.viewPass}
                     onChangeText={this.props.onChange}
@@ -24,17 +26,22 @@ class TextInputComponent extends React.Component {
                     <TouchableOpacity
                         onPress = { () => this.setState({ viewPass: !this.state.viewPass }) }
                         style = {{ 
-                            width: 50,
+                            width: 30,
                             height: 30,
-                            backgroundColor: "skyblue",
+                            backgroundColor: "#219653",
                             marginBottom: 20,
                             justifyContent: "center",
                             alignItems: "center",
                             borderWidth: 2,
                             borderColor: "black",
+                            borderRadius: 5,
                         }}
                     >
-                        <Text>{ this.state.viewPass ? "Show" : "Hide" }</Text>
+                        {/* <Text>{ this.state.viewPass ? "Show" : "Hide" }</Text> */}
+                        <MaterialCommunityIcons
+                            name = { this.state.viewPass ? "eye-off-outline" : "eye-outline" }
+                            size="20"
+                        />
                     </TouchableOpacity>
                 )}
             </View>

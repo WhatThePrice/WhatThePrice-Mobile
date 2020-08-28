@@ -41,7 +41,7 @@ class Auth extends React.Component {
                 console.log("TIME is ", getLoginData.data);
                 Alert.alert("Success", "Login successful", [
                     {
-                        text: "To Dash",
+                        text: "To Dashboard",
                         onPress: () => this.props.navigation.navigate("What The Price"),
                     },
                 ]);
@@ -67,10 +67,10 @@ class Auth extends React.Component {
     }
     _buttonPressed() {
         const data = {
-            // email: this.state.email,
-            // password: this.state.password,
-            email: "jam@mail.com",
-            password: "123456",
+            email: this.state.email,
+            password: this.state.password,
+            // email: "syazwan@mail.com",
+            // password: "1234567",
         }
         this.setState({ loading: true });
         this.props.onLogin(data);
@@ -132,6 +132,7 @@ class Auth extends React.Component {
                             inputPlaceHolder="email"
                             inputKeyType="default"
                             inputSecure={false}
+                            clearButton="always"
                             onChange={ (email) => this.setState({email}) }
                         />
                         <TextInputComponent
@@ -139,6 +140,7 @@ class Auth extends React.Component {
                             inputPlaceHolder="password"
                             inputKeyType="default"
                             inputSecure={true}
+                            clearButton="always"
                             showHide={true}
                             onChange={ (password) => this.setState({password}) }
                         />
@@ -157,6 +159,7 @@ class Auth extends React.Component {
                             textInput="Name"
                             inputPlaceHolder="name"
                             inputKeyType="default"
+                            clearButton="always"
                             inputSecure={false}
                             onChange={ (name) => this.setState({name}) }
                         />
@@ -164,6 +167,7 @@ class Auth extends React.Component {
                             textInput="Email"
                             inputPlaceHolder="email"
                             inputKeyType="default"
+                            clearButton="always"
                             inputSecure={false}
                             onChange={ (email) => this.setState({email}) }
                         />
@@ -171,6 +175,7 @@ class Auth extends React.Component {
                             textInput="Password"
                             inputPlaceHolder="password"
                             inputKeyType="default"
+                            clearButton="always"
                             inputSecure={true}
                             showHide={true}
                             onChange={ (password) => this.setState({password}) }
@@ -179,6 +184,7 @@ class Auth extends React.Component {
                             textInput="Password Confirmation"
                             inputPlaceHolder="password confirmation"
                             inputKeyType="default"
+                            clearButton="always"
                             inputSecure={true}
                             showHide={true}
                             onChange={ (password_confirmation) => this.setState({password_confirmation}) }
